@@ -1,0 +1,51 @@
+<div class="container">
+  <div class="header">
+    <h2>
+      <ng-container *ngIf="userId && (selectedUserName$ | async) as userName">
+        Productos de {{ userName }}
+      </ng-container>
+      <ng-container *ngIf="!userId">
+        Todos los Productos
+      </ng-container>
+    </h2>
+    <div class="actions">
+      <button class="btn-back" (click)="goBack()">Volver</button>
+      <button class="btn-primary" (click)="createNewProduct()">Nuevo Producto</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading">
+    <app-loading></app-loading>
+  </div>
+
+  <div *ngIf="error$ | async as error" class="error-message">
+    <app-error-message [message]="error"></app-error-message>
+  </div>
+
+  <table *ngIf="(products$ | async)?.length && !(loading$ | async)" class="data-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Precio</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let product of products$ | async">
+      <td>{{ product.id }}</td>
+      <td>{{ product.name }}</td>
+      <td>${{ product.price }}</td>
+      <td class="actions">
+        <button class="btn-view" (click)="viewProductDetails(product)">Ver</button>
+        <button class="btn-edit" (click)="editProduct(product)">Editar</button>
+        <button class="btn-delete" (click)="deleteProduct(product.id!)">Eliminar</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="(products$ | async)?.length === 0 && !(loading$ | async)" class="no-data">
+    No hay productos disponibles.
+  </div>
+</div>

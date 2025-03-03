@@ -1,0 +1,42 @@
+<div class="container">
+  <div class="header">
+    <h2>Gestión de Usuarios</h2>
+    <button class="btn-primary" (click)="createNewUser()">Nuevo Usuario</button>
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading">
+    <app-loading></app-loading>
+  </div>
+
+  <div *ngIf="error$ | async as error" class="error-message">
+    <app-error-message [message]="error"></app-error-message>
+  </div>
+
+  <table *ngIf="(users$ | async)?.length && !(loading$ | async)" class="data-table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nombre</th>
+      <th>Email</th>
+      <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let user of users$ | async">
+      <td>{{ user.id }}</td>
+      <td>{{ user.name }}</td>
+      <td>{{ user.email }}</td>
+      <td class="actions">
+        <button class="btn-view" (click)="viewUserDetails(user)">Ver</button>
+        <button class="btn-products" (click)="viewUserProducts(user)">Productos</button>
+        <button class="btn-edit" (click)="editUser(user)">Editar</button>
+        <button class="btn-delete" (click)="deleteUser(user.id!)">Eliminar</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="(users$ | async)?.length === 0 && !(loading$ | async)" class="no-data">
+    No hay usuarios disponibles.
+  </div>
+</div>

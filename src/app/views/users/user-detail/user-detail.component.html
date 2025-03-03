@@ -1,0 +1,39 @@
+<div class="container" *ngIf="user$ | async as user">
+  <div class="header">
+    <h2>Detalles del Usuario</h2>
+    <div class="actions">
+      <button class="btn-back" (click)="goBack()">Volver</button>
+      <button class="btn-edit" (click)="goToEdit()">Editar</button>
+      <button class="btn-products" (click)="viewProducts()">Ver Productos</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading">
+    <app-loading></app-loading>
+  </div>
+
+  <div *ngIf="error$ | async as error" class="error-message">
+    <app-error-message [message]="error"></app-error-message>
+  </div>
+
+  <div class="user-detail" *ngIf="!(loading$ | async)">
+    <div class="detail-item">
+      <strong>ID:</strong> {{ user.id }}
+    </div>
+    <div class="detail-item">
+      <strong>Nombre:</strong> {{ user.name }}
+    </div>
+    <div class="detail-item">
+      <strong>Email:</strong> {{ user.email }}
+    </div>
+
+    <div class="products-section" *ngIf="user.products && user.products.length">
+      <h3>Productos asociados</h3>
+      <ul>
+        <li *ngFor="let product of user.products">
+          {{ product.name }} - ${{ product.price }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

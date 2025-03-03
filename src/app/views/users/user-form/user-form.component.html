@@ -1,0 +1,40 @@
+<div class="container">
+  <div class="header">
+    <h2>{{ isEditMode ? 'Editar' : 'Crear' }} Usuario</h2>
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading">
+    <app-loading></app-loading>
+  </div>
+
+  <div *ngIf="error$ | async as error" class="error-message">
+    <app-error-message [message]="error"></app-error-message>
+  </div>
+
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()" class="form">
+    <div class="form-group">
+      <label for="name">Nombre:</label>
+      <input type="text" id="name" formControlName="name" class="form-control">
+      <div *ngIf="userForm.get('name')?.invalid && userForm.get('name')?.touched" class="validation-error">
+        <span *ngIf="userForm.get('name')?.errors?.['required']">El nombre es obligatorio</span>
+        <span *ngIf="userForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 2 caracteres</span>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" id="email" formControlName="email" class="form-control">
+      <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="validation-error">
+        <span *ngIf="userForm.get('email')?.errors?.['required']">El email es obligatorio</span>
+        <span *ngIf="userForm.get('email')?.errors?.['email']">El formato del email no es válido</span>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button type="button" class="btn-cancel" (click)="onCancel()">Cancelar</button>
+      <button type="submit" class="btn-submit" [disabled]="userForm.invalid">
+        {{ isEditMode ? 'Actualizar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

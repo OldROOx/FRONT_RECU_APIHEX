@@ -1,0 +1,33 @@
+<div class="container" *ngIf="product$ | async as product">
+  <div class="header">
+    <h2>Detalles del Producto</h2>
+    <div class="actions">
+      <button class="btn-back" (click)="goBack()">Volver</button>
+      <button class="btn-edit" (click)="goToEdit()">Editar</button>
+      <button class="btn-owner" (click)="viewOwner()">Ver Propietario</button>
+    </div>
+  </div>
+
+  <div *ngIf="loading$ | async" class="loading">
+    <app-loading></app-loading>
+  </div>
+
+  <div *ngIf="error$ | async as error" class="error-message">
+    <app-error-message [message]="error"></app-error-message>
+  </div>
+
+  <div class="product-detail" *ngIf="!(loading$ | async)">
+    <div class="detail-item">
+      <strong>ID:</strong> {{ product.id }}
+    </div>
+    <div class="detail-item">
+      <strong>Nombre:</strong> {{ product.name }}
+    </div>
+    <div class="detail-item">
+      <strong>Precio:</strong> ${{ product.price }}
+    </div>
+    <div class="detail-item">
+      <strong>Propietario:</strong> {{ ownerName$ | async }} (ID: {{ product.user_id }})
+    </div>
+  </div>
+</div>
