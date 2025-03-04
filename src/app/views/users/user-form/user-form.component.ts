@@ -2,28 +2,31 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../../../models/user.model';
-import { UserViewModel } from '../../../viewmodels/user.viewmodel';
+import {UserViewModel} from '../../../viewmodels/user-viewmodel.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-form',
-  standalone: false,
   templateUrl: './user-form.component.html',
-  styleUrl: './user-form.component.css'
+  styleUrls: ['./user-form.component.css'],
+  standalone: false
 })
-export class UserFormComponent {
-
+export class UserFormComponent implements OnInit {
   userForm!: FormGroup;
   userId?: number;
   isEditMode = false;
-  loading$ = this.userViewModel.loading$;
-  error$ = this.userViewModel.error$;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
 
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
     private router: Router,
     private userViewModel: UserViewModel
-  ) {}
+  ) {
+    this.loading$ = this.userViewModel.loading$;
+    this.error$ = this.userViewModel.error$;
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -76,5 +79,4 @@ export class UserFormComponent {
   onCancel(): void {
     this.router.navigate(['/users']);
   }
-
 }

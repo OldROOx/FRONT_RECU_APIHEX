@@ -1,24 +1,29 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserViewModel } from '../../../viewmodels/user.viewmodel';
+import {UserViewModel} from '../../../viewmodels/user-viewmodel.service';
+import { Observable } from 'rxjs';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-user-detail',
-  standalone: false,
   templateUrl: './user-detail.component.html',
-  styleUrl: './user-detail.component.css'
+  styleUrls: ['./user-detail.component.css'],
+  standalone: false
 })
-export class UserDetailComponent implements OnInit{
-
-  user$ = this.userViewModel.selectedUser$;
-  loading$ = this.userViewModel.loading$;
-  error$ = this.userViewModel.error$;
+export class UserDetailComponent implements OnInit {
+  user$: Observable<User | null>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
 
   constructor(
     private route: ActivatedRoute,
     private router: Router,
     private userViewModel: UserViewModel
-  ) {}
+  ) {
+    this.user$ = this.userViewModel.selectedUser$;
+    this.loading$ = this.userViewModel.loading$;
+    this.error$ = this.userViewModel.error$;
+  }
 
   ngOnInit(): void {
     this.route.params.subscribe(params => {
@@ -28,7 +33,7 @@ export class UserDetailComponent implements OnInit{
   }
 
   goToEdit(): void {
-    this.user$.subscribe(user => {
+    this.user$.subscribe((user: User | null) => {
       if (user) {
         this.router.navigate(['/users/edit', user.id]);
       }
@@ -36,7 +41,7 @@ export class UserDetailComponent implements OnInit{
   }
 
   viewProducts(): void {
-    this.user$.subscribe(user => {
+    this.user$.subscribe((user: User | null) => {
       if (user) {
         this.router.navigate(['/products'], { queryParams: { user_id: user.id } });
       }

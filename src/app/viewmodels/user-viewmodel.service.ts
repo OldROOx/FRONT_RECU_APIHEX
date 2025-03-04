@@ -6,7 +6,7 @@ import { UserService } from '../services/user.service';
 @Injectable({
   providedIn: 'root'
 })
-export class UserViewmodelService {
+export class UserViewModel {
   private _users = new BehaviorSubject<User[]>([]);
   private _selectedUser = new BehaviorSubject<User | null>(null);
   private _loading = new BehaviorSubject<boolean>(false);

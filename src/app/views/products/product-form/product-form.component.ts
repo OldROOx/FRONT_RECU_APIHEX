@@ -2,25 +2,25 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Product } from '../../../models/product.model';
-import { ProductViewModel } from '../../../viewmodels/product.viewmodel';
-import { UserViewModel } from '../../../viewmodels/user.viewmodel';
-
+import {ProductViewModel} from '../../../viewmodels/product-viewmodel.service';
+import {UserViewModel} from '../../../viewmodels/user-viewmodel.service';
+import { Observable } from 'rxjs';
+import { User } from '../../../models/user.model';
 
 @Component({
   selector: 'app-product-form',
-  standalone: false,
   templateUrl: './product-form.component.html',
-  styleUrl: './product-form.component.css'
+  styleUrls: ['./product-form.component.css'],
+  standalone: false
 })
 export class ProductFormComponent implements OnInit {
-
   productForm!: FormGroup;
   productId?: number;
   userId?: number;
   isEditMode = false;
-  loading$ = this.productViewModel.loading$;
-  error$ = this.productViewModel.error$;
-  users$ = this.userViewModel.users$;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
+  users$: Observable<User[]>;
 
   constructor(
     private fb: FormBuilder,
@@ -28,7 +28,11 @@ export class ProductFormComponent implements OnInit {
     private router: Router,
     private productViewModel: ProductViewModel,
     private userViewModel: UserViewModel
-  ) {}
+  ) {
+    this.loading$ = this.productViewModel.loading$;
+    this.error$ = this.productViewModel.error$;
+    this.users$ = this.userViewModel.users$;
+  }
 
   ngOnInit(): void {
     this.userViewModel.loadUsers();
@@ -107,5 +111,4 @@ export class ProductFormComponent implements OnInit {
       this.router.navigate(['/products']);
     }
   }
-
 }

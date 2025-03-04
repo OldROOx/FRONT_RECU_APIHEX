@@ -1,35 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserViewModel } from '../../../viewmodels/user.viewmodel';
-import { ProductViewModel } from '../../../viewmodels/product.viewmodel';
+import {UserViewModel} from '../../../viewmodels/user-viewmodel.service';
+import {ProductViewModel} from '../../../viewmodels/product-viewmodel.service';
 import { Product } from '../../../models/product.model';
 import { map } from 'rxjs/operators';
-
-
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',
-  standalone: false,
   templateUrl: './product-list.component.html',
-  styleUrl: './product-list.component.css'
+  styleUrls: ['./product-list.component.css'],
+  standalone: false
 })
-export class ProductListComponent implements OnInit  {
-
-  products$ = this.productViewModel.products$;
-  loading$ = this.productViewModel.loading$;
-  error$ = this.productViewModel.error$;
-
+export class ProductListComponent implements OnInit {
+  products$: Observable<Product[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
   userId?: number;
-  selectedUserName$ = this.userViewModel.selectedUser$.pipe(
-    map(user => user ? user.name : null)
-  );
+  selectedUserName$: Observable<string | null>;
 
   constructor(
     private productViewModel: ProductViewModel,
     private userViewModel: UserViewModel,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) {
+    this.products$ = this.productViewModel.products$;
+    this.loading$ = this.productViewModel.loading$;
+    this.error$ = this.productViewModel.error$;
+    this.selectedUserName$ = this.userViewModel.selectedUser$.pipe(
+      map(user => user ? user.name : null)
+    );
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -73,5 +75,4 @@ export class ProductListComponent implements OnInit  {
       this.router.navigate(['/users']);
     }
   }
-
 }

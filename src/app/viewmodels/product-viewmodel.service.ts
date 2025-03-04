@@ -3,11 +3,10 @@ import { BehaviorSubject, Observable, catchError, finalize, tap } from 'rxjs';
 import { Product } from '../models/product.model';
 import { ProductService } from '../services/product.service';
 
-
 @Injectable({
   providedIn: 'root'
 })
-export class ProductViewmodelService {
+export class ProductViewModel {
   private _products = new BehaviorSubject<Product[]>([]);
   private _selectedProduct = new BehaviorSubject<Product | null>(null);
   private _loading = new BehaviorSubject<boolean>(false);

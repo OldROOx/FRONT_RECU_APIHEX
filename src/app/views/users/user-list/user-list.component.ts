@@ -1,23 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { User } from '../../../models/user.model';
-import { UserViewModel } from '../../../viewmodels/user.viewmodel';
+import {UserViewModel} from '../../../viewmodels/user-viewmodel.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-user-list',
-  standalone: false,
   templateUrl: './user-list.component.html',
-  styleUrl: './user-list.component.css'
+  styleUrls: ['./user-list.component.css'],
+  standalone: false
 })
-export class UserListComponent  implements OnInit {
-  users$ = this.userViewModel.users$;
-  loading$ = this.userViewModel.loading$;
-  error$ = this.userViewModel.error$;
+export class UserListComponent implements OnInit {
+  users$: Observable<User[]>;
+  loading$: Observable<boolean>;
+  error$: Observable<string | null>;
 
   constructor(
     private userViewModel: UserViewModel,
     private router: Router
-  ) {}
+  ) {
+    this.users$ = this.userViewModel.users$;
+    this.loading$ = this.userViewModel.loading$;
+    this.error$ = this.userViewModel.error$;
+  }
 
   ngOnInit(): void {
     this.userViewModel.loadUsers();
@@ -46,5 +51,4 @@ export class UserListComponent  implements OnInit {
   createNewUser(): void {
     this.router.navigate(['/users/new']);
   }
-
 }
